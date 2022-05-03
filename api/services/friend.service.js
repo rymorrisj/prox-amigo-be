@@ -1,6 +1,30 @@
 const httpStatus = require('http-status');
-const { Friend } = require('../models');
+// const { Friend } = require('../models');
 const ApiError = require('../utils/ApiError');
+
+const Friend = {
+  isEmailTaken() {
+
+  },
+  create() {
+
+  },
+  paginate() {
+
+  },
+  remove() {
+
+  },
+  findById() {
+
+  },
+  findOne() {
+
+  },
+  save() {
+
+  },
+}
 
 /**
  * Create a Friend

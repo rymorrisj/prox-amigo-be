@@ -1,7 +1,7 @@
 const express = require('express');
 const friendRoute = require('./friend.route');
 // const docsRoute = require('./docs.route');
-// const config = require('../../config/config');
+// const config = require('../../configs/config');
 
 const router = express.Router();
 
