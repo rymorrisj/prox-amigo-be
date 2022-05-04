@@ -1,9 +1,24 @@
 const app = require('./app');
-const config = require('./configs/config');
-const logger = require('./configs/logger');
+const config = require('../configs/config');
+const logger = require('../configs/logger');
+const db = require('../database/db')
+const friendModel = require('../database/models/friend.model');
 
 let server;
-server = app.listen(config.serverPort, () => {
+server = app.listen(config.serverPort, async () => {
+    // Start db here
+    await db.ensureSchema();
+
+    await friendModel.createFriend({
+      username: 'test',
+      password: 'test',
+      latitude: 'test',
+      longitude: 'test',
+      cityState: 'test' ,
+    }).then((resp) => logger.info('user created' + '************* \n' + resp))
+
+    await friendModel.findFriend(1).then((resp) => logger.info('user found' + '************* \n' + JSON.stringify(resp)))
+    
     logger.info(`Listening to port ${config.serverPort}`);
 });
 

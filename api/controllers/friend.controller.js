@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
-const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { friendService } = require('../services');
 
@@ -9,19 +8,10 @@ const createFriend = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(friend);
 });
 
-const getFriends = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await friendService.queryFriends(filter, options);
+const findFriend = catchAsync(async (req, res) => {
+  const username = pick(req.query, ['username']);
+  const result = await friendService.findFriend(username);
   res.send(result);
-});
-
-const getFriend = catchAsync(async (req, res) => {
-  const friend = await friendService.getFriendById(req.params.friendId);
-  if (!friend) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Friend not found');
-  }
-  res.send(friend);
 });
 
 const updateFriend = catchAsync(async (req, res) => {
@@ -36,8 +26,7 @@ const deleteFriend = catchAsync(async (req, res) => {
 
 module.exports = {
   createFriend,
-  getFriends,
-  getFriend,
+  findFriend,
   updateFriend,
   deleteFriend,
 };
