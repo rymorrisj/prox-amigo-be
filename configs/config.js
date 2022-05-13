@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const ENVIRONMENTS = Object.freeze({
   dev: 'development',
@@ -21,7 +21,8 @@ module.exports = {
 			password: process.env.MYSQL_ROOT_PASSWORD,
       		port: process.env.MYSQL_PORT,
 			database: process.env.MYSQL_NAME,
-			charset: 'utf8'
+			charset: 'utf8',
+			useNullAsDefault: true
 		}
 	}
 };

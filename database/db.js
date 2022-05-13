@@ -53,8 +53,18 @@ const Friends_Groups = knex.schema.hasTable('Friends_Groups')
     });
 
 // The ensureSchema function builds the schema for the db
-knex.ensureSchema = async () => {
-  return Promise.all([Friends, Groups, Friends_Groups]);
-};
+knex.ensureSchema = async () => await Promise.all([Friends, Groups, Friends_Groups]);
+
+if (config.env === 'development') { 
+    knex.dropAll = async () => {
+        await Promise
+            .all([
+                knex.schema.dropTableIfExists('Friends'),
+                knex.schema.dropTableIfExists('Groups'),
+                knex.schema.dropTableIfExists('Friends_Groups')
+            ])
+            .then(() => logger.info('All Tables Dropped.'));
+    }
+}
 
 module.exports = knex;

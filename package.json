@@ -4,8 +4,8 @@
   "description": "Backend for Prox Amigo app",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test",
-    "start": "nodemon ./api/index.js"
+    "test": "set NODE_ENV=test&& npm run test",
+    "dev": "set NODE_ENV=development&& nodemon ./api/index.js"
   },
   "repository": {
     "type": "git",
