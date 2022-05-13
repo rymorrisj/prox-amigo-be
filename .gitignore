@@ -1,12 +1,18 @@
-# Deps
-node_modules/
+# Dependencies
+node_modules
 
-# Environment variables
-.env
-.env.test
+# yarn
+yarn-error.log
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
-# npm cache directory
-.npm
+# Environment varibales
+.env*
 
-# eslint cache
-.eslintcache
+# Code coverage
+coverage
