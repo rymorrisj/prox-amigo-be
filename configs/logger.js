@@ -1,6 +1,10 @@
 const winston = require('winston');
 const config = require('./config');
-
+/**
+ * Logger has 5 types of logs
+ * 'fatal', 'error', 'warn', 'info', 'debug'
+ * Source: https://www.npmjs.com/package/logger
+ */
 const enumerateErrorFormat = winston.format((info) => {
   if (info instanceof Error) {
     Object.assign(info, { message: info.stack });

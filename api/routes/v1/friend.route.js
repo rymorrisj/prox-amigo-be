@@ -4,13 +4,9 @@ const friendController = require('../../controllers/friend.controller');
 const router = express.Router();
 
 router
-  .route('/')
-  .post(friendController.createFriend)
-  .get(friendController.getFriend);
-
-router
   .route('/:friendId')
-  .get(friendController.getFriend)
+  .get(friendController.findFriend)
+  .post(friendController.createFriend)
   .patch(friendController.updateFriend)
   .delete(friendController.deleteFriend);
 

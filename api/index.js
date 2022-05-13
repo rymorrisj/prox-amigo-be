@@ -1,10 +1,22 @@
 const app = require('./app');
-const config = require('./configs/config');
-const logger = require('./configs/logger');
+const config = require('../configs/config');
+const logger = require('../configs/logger');
+const db = require('../database/db')
+const friendModel = require('../database/models/friend.model');
 
 let server;
-server = app.listen(config.serverPort, () => {
-    logger.info(`Listening to port ${config.serverPort}`);
+server = app.listen(config.serverPort, async () => {
+  // Drop everything for dev
+  // await db.dropAll();  
+
+  // Start db here
+  await db.ensureSchema();
+
+  // Testing the DB without endpoints for now
+  // await friendModel.createFriend({ username: 'test', password: 'test', latitude: 'test', longitude: 'test', cityState: 'test' });
+  // await friendModel.getAllFriends().then(resp => logger.info(JSON.stringify(resp)));
+    
+  logger.info(`Listening to port ${config.serverPort}`);
 });
 
 const exitHandler = () => {
