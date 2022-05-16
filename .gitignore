@@ -3,6 +3,7 @@ node_modules
 
 # yarn
 yarn-error.log
+.pnp.*
 .yarn/*
 !.yarn/cache
 !.yarn/patches
@@ -16,3 +17,6 @@ yarn-error.log
 
 # Code coverage
 coverage
+
+# Local dev file for quickly testing requests
+requests.rest
