@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const { groupSchema } = require('./group.model');
 
 const userSchema = mongoose.Schema(
   {
@@ -43,6 +44,15 @@ const userSchema = mongoose.Schema(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    groups: {
+      type: [groupSchema],
+      index: true,
+      validate(value) {
+        if (value.length >= 10) {
+          throw new Error('Users can only have up to 10 groups at a time. This includes groups they have created');
+        }
+      },
     },
   },
   {
@@ -88,4 +98,4 @@ userSchema.pre('save', async function (next) {
  */
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = { User, userSchema };
