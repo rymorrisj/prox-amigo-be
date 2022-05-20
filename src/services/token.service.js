@@ -69,6 +69,12 @@ const generateAuthTokens = async (user) => {
   const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
   const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
 
+  // If user has a refresh token already, remove it
+  const userRefreshToken = await Token.findOne({ type: 'refresh', user: user.id, blacklisted: false });
+  if (userRefreshToken) {
+    await userRefreshToken.remove();
+  }
+
   const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
   const refreshToken = generateToken(user.id, refreshTokenExpires, tokenTypes.REFRESH);
   await saveToken(refreshToken, user.id, refreshTokenExpires, tokenTypes.REFRESH);
