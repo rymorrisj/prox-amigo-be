@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const { groupService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -21,7 +22,14 @@ const getUser = catchAsync(async (req, res) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  res.send(user);
+
+  const userCreatedGroups = await groupService.getAllUserCreatedGroups(req.params.userId);
+  const response = { user };
+  if (userCreatedGroups) {
+    response.userCreatedGroups = userCreatedGroups;
+  }
+
+  res.send(response);
 });
 
 const updateUser = catchAsync(async (req, res) => {
