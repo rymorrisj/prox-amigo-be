@@ -1,6 +1,20 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const groupService = require('./group.service');
+
+/**
+ * Add a group a user creates or joins to the user's groups
+ * @param {ObjectId} userId
+ * @param {Object} group
+ * @returns {Promise<User>}
+ */
+ const addGroupToUser = async (userId, group) => {
+  return await User.findById(userId).then(user => {
+    user.groups.push(groupService.parseGroupBody(group));
+    user.save();
+  });
+};
 
 /**
  * Create a user
@@ -80,6 +94,7 @@ const deleteUserById = async (userId) => {
 };
 
 module.exports = {
+  addGroupToUser,
   createUser,
   queryUsers,
   getUserById,

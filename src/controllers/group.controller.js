@@ -3,12 +3,19 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { groupService } = require('../services');
+const { userService } = require('../services');
 
 const createGroup = catchAsync(async (req, res) => {
   const group = await groupService.createGroup({
-    creator: req.params.userId,
+    owner: req.params.userId,
     groupName: req.body.groupName,
+    members: [req.params.userId]
   });
+
+  if (group) {
+    await userService.addGroupToUser(group.owner, group)
+  }
+
   res.status(httpStatus.CREATED).send(group);
 });
 

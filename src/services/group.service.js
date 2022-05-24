@@ -3,6 +3,20 @@ const { Group } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
+ * Remove everything from the group body except id, owner and name
+ * We dont need any other metadata for groups
+ * We also do not want to expose private member ids to other users
+ * @param {Object} group
+ * @returns {Object}
+ */
+ const parseGroupBody = (group) => {
+  return {
+    id: group.id,
+    groupName: group.groupName,
+  }
+}
+
+/**
  * Create a user
  * @param {Object} groupBody
  * @returns {Promise<Group>}
@@ -38,7 +52,7 @@ const getGroupByName = async (name) => {
  * @returns {Promise<Group>}
  */
 const getAllUserCreatedGroups = async (userId) => {
-  return Group.find({ creator: userId });
+  return Group.find({ owner: userId });
 };
 
 /**
@@ -81,4 +95,5 @@ module.exports = {
   getAllUserCreatedGroups,
   updateGroupById,
   deleteGroupById,
+  parseGroupBody,
 };

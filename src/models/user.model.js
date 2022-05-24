@@ -48,6 +48,7 @@ const userSchema = mongoose.Schema(
     groups: {
       type: [groupSchema],
       index: true,
+      default: undefined,
       validate(value) {
         if (value.length >= 10) {
           throw new Error('Users can only have up to 10 groups at a time. This includes groups they have created');
