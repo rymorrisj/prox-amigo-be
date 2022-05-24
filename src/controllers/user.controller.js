@@ -23,7 +23,8 @@ const getUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  const userCreatedGroups = await groupService.getAllUserCreatedGroups(req.params.userId);
+  const allGroups = await groupService.getAllUserCreatedGroups(req.params.userId);
+  const userCreatedGroups = allGroups.map(group => groupService.parseGroupBody(group));
   const response = { user };
   if (userCreatedGroups) {
     response.userCreatedGroups = userCreatedGroups;

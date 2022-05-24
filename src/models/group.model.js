@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { userSchema } = require('./user.model');
+const { User } = require('./user.model');
 
 const groupSchema = mongoose.Schema(
   {
@@ -11,14 +11,20 @@ const groupSchema = mongoose.Schema(
       minLength: 5,
       maxLength: 30,
     },
-    creator: {
+    owner: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
     members: {
-      type: [userSchema],
+      type: [{ type: mongoose.ObjectId, ref: User }],
+      default: undefined,
+      index: true,
+      validate(value) {
+        if (value.length >= 25) {
+          throw new Error('Groups can only have 25 members at a time plus the owner');
+        }
+      },
     },
   },
   {
