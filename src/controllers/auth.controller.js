@@ -2,17 +2,26 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, tokenService, emailService } = require('../services');
 
+const setUpCookie = (refreshToken, res) => {
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: refreshToken.expires });
+};
+
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+  
+  res.status(httpStatus.CREATED);
+  setUpCookie(tokens.refreshToken, res);
+  res.send({ user, accessToken: tokens.access });
 });
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  console.log('token ' + JSON.stringify(tokens));
+  setUpCookie(tokens.refresh, res);
+  res.send({ user, accessToken: tokens.access });
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -22,7 +31,8 @@ const logout = catchAsync(async (req, res) => {
 
 const refreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.refreshAuth(req.body.refreshToken);
-  res.send({ ...tokens });
+  setUpCookie(tokens.refreshToken, res);
+  res.send({ accessToken: tokens.access });
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
