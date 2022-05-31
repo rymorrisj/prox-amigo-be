@@ -6,6 +6,7 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const httpStatus = require('http-status');
+const cookieParser = require('cookie-parser');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
@@ -52,13 +53,30 @@ app.use(mongoSanitize());
 // gzip compression
 app.use(compression());
 
+// whitelist dev routes for cors
+const whitelist = ['http://localhost:3000', 'https://localhost:3000'];
+const corsOptions = {
+  credentials: true,
+  origin: function (origin, callback) {
+    console.log(origin)
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
 // enable cors
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
+
+// middleware for exposing cookies
+app.use(cookieParser());
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {

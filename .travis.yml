@@ -9,7 +9,7 @@ branches:
     - main
 env:
   global:
-    - PORT=3000
+    - PORT=3001
     - MONGODB_URL=${{ secrets.MONGODB_URL }}
     - JWT_SECRET=${{ secrets.JWT_SECRET }}
     - JWT_ACCESS_EXPIRATION_MINUTES=30
